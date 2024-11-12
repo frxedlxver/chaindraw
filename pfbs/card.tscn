@@ -1,0 +1,59 @@
+[gd_scene load_steps=6 format=3 uid="uid://bmj1kay20v7mg"]
+
+[ext_resource type="Theme" uid="uid://om4spe0g6l8c" path="res://cards/theme_card.tres" id="1_fasgp"]
+[ext_resource type="Script" path="res://src/cards/card_node.gd" id="1_sa1af"]
+[ext_resource type="Texture2D" uid="uid://dsqtnjjljjxqp" path="res://sprites/cardborder.png" id="3_i3ryh"]
+[ext_resource type="FontFile" path="res://fonts/connection_ii/ConnectionII.tres" id="4_p2v7t"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_rkogu"]
+line_spacing = 0.0
+font = ExtResource("4_p2v7t")
+font_size = 40
+font_color = Color(0.974333, 1, 0.89, 1)
+outline_size = 15
+outline_color = Color(0.054902, 0, 0.192157, 1)
+shadow_size = 0
+
+[node name="PanelContainer" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -140.0
+offset_right = 100.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(100, 140)
+theme = ExtResource("1_fasgp")
+script = ExtResource("1_sa1af")
+
+[node name="BaseTexRect" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("3_i3ryh")
+
+[node name="CostLabel" type="Label" parent="BaseTexRect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.08
+anchor_top = 0.093
+anchor_right = 0.21
+anchor_bottom = 0.282
+offset_top = -0.0400009
+offset_bottom = 0.0400009
+size_flags_horizontal = 0
+text = "0
+"
+label_settings = SubResource("LabelSettings_rkogu")
+horizontal_alignment = 1
+autowrap_mode = 2
+uppercase = true
+max_lines_visible = 1
+
+[node name="CardArtRect" type="TextureRect" parent="."]
+layout_mode = 2
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

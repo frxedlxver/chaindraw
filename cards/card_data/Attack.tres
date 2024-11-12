@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=3 format=3 uid="uid://bh4rxuvut15pn"]
+
+[ext_resource type="Script" path="res://src/cards/card_data.gd" id="1_flo05"]
+[ext_resource type="Texture2D" uid="uid://wpm5q1h2snek" path="res://sprites/card_art_attack.png" id="1_mqmuc"]
+
+[resource]
+script = ExtResource("1_flo05")
+title = "Attack"
+description = "Deal 5 damage to one target"
+cost = 1
+faceTex = ExtResource("1_mqmuc")
+target_type = 2
+dealsDamage = true
+givesBlock = false
+inflictsEnemyStatus = false
+inflictsPlayerStatus = false

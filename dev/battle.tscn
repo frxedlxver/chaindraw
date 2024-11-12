@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://c4itt2vj444fs"]
+
+[ext_resource type="PackedScene" uid="uid://go4mh6n7jf7c" path="res://pfbs/hand.tscn" id="1_ekkxk"]
+[ext_resource type="Script" path="res://dev/main.gd" id="1_ksy0d"]
+[ext_resource type="PackedScene" uid="uid://bimnncx3pq1xa" path="res://dev/hand_debug_box.tscn" id="2_y1ix0"]
+[ext_resource type="Script" path="res://src/player.gd" id="3_wcn1n"]
+[ext_resource type="Script" path="res://src/battle/enemy_container.gd" id="5_21klo"]
+[ext_resource type="Script" path="res://src/battle/battle_controller.gd" id="5_hmish"]
+
+[node name="Main" type="Node" node_paths=PackedStringArray("hand", "player")]
+script = ExtResource("1_ksy0d")
+hand = NodePath("BattleController/Hand")
+player = NodePath("Player")
+
+[node name="HandDebugBox" parent="." node_paths=PackedStringArray("hand") instance=ExtResource("2_y1ix0")]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = -244.0
+offset_right = 328.0
+offset_bottom = 0.0
+grow_vertical = 0
+hand = NodePath("../BattleController/Hand")
+
+[node name="BattleController" type="Node" parent="." node_paths=PackedStringArray("hand")]
+script = ExtResource("5_hmish")
+hand = NodePath("Hand")
+
+[node name="Hand" parent="BattleController" instance=ExtResource("1_ekkxk")]
+offset_left = 1126.0
+offset_top = 1748.0
+offset_right = 1126.0
+offset_bottom = 1748.0
+
+[node name="EnemyContainer" type="Node2D" parent="BattleController"]
+position = Vector2(1155, 428)
+script = ExtResource("5_21klo")
+
+[node name="Player" type="Node" parent="."]
+script = ExtResource("3_wcn1n")

@@ -1,0 +1,70 @@
+[gd_scene load_steps=9 format=3 uid="uid://c4itt2vj444fs"]
+
+[ext_resource type="PackedScene" uid="uid://go4mh6n7jf7c" path="res://pfbs/hand.tscn" id="1_ekkxk"]
+[ext_resource type="Script" path="res://dev/main.gd" id="1_ksy0d"]
+[ext_resource type="Script" path="res://src/player.gd" id="3_wcn1n"]
+[ext_resource type="Script" path="res://dev/button_manager.gd" id="4_1ryfb"]
+[ext_resource type="Script" path="res://src/battle/target_selector.gd" id="4_lrpds"]
+[ext_resource type="Script" path="res://src/battle/enemy_container.gd" id="5_21klo"]
+[ext_resource type="Script" path="res://src/battle/battle_controller.gd" id="5_hmish"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5plv2"]
+radius = 39.0
+
+[node name="Main" type="Node" node_paths=PackedStringArray("hand", "player")]
+script = ExtResource("1_ksy0d")
+hand = NodePath("BattleController/Hand")
+player = NodePath("Player")
+
+[node name="BattleController" type="Node" parent="." node_paths=PackedStringArray("hand")]
+script = ExtResource("5_hmish")
+hand = NodePath("Hand")
+
+[node name="Hand" parent="BattleController" instance=ExtResource("1_ekkxk")]
+
+[node name="ButtonManager" type="Node" parent="BattleController" node_paths=PackedStringArray("end_turn_button")]
+script = ExtResource("4_1ryfb")
+end_turn_button = NodePath("../BattleUI/EndTurnButton")
+
+[node name="BattleUI" type="PanelContainer" parent="BattleController"]
+offset_left = 1095.0
+offset_top = -846.0
+offset_right = 1173.0
+offset_bottom = -806.0
+
+[node name="EndTurnButton" type="Button" parent="BattleController/BattleUI"]
+layout_mode = 2
+text = "End Turn"
+
+[node name="EnemyContainer" type="Control" parent="BattleController"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("5_21klo")
+
+[node name="EnemyPosition1" type="Node2D" parent="BattleController/EnemyContainer"]
+
+[node name="DebugShape" type="CollisionShape2D" parent="BattleController/EnemyContainer/EnemyPosition1"]
+position = Vector2(-381, -1484)
+shape = SubResource("CircleShape2D_5plv2")
+
+[node name="EnemyPosition2" type="Node2D" parent="BattleController/EnemyContainer"]
+position = Vector2(200, 0)
+
+[node name="DebugShape" type="CollisionShape2D" parent="BattleController/EnemyContainer/EnemyPosition2"]
+position = Vector2(-381, -1484)
+shape = SubResource("CircleShape2D_5plv2")
+
+[node name="EnemyPosition3" type="Node2D" parent="BattleController/EnemyContainer"]
+position = Vector2(400, 0)
+
+[node name="DebugShape" type="CollisionShape2D" parent="BattleController/EnemyContainer/EnemyPosition3"]
+position = Vector2(-381, -1484)
+shape = SubResource("CircleShape2D_5plv2")
+
+[node name="Player" type="Node" parent="."]
+script = ExtResource("3_wcn1n")
+
+[node name="TargetSelectorUI" type="Line2D" parent="."]
+script = ExtResource("4_lrpds")

@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://bimnncx3pq1xa"]
+
+[ext_resource type="Script" path="res://pfbs/hand_debug_box.gd" id="1_2ordc"]
+[ext_resource type="Script" path="res://pfbs/hand_size.gd" id="2_aicm7"]
+[ext_resource type="Script" path="res://dev/add_attack_card.gd" id="3_g2erq"]
+[ext_resource type="Script" path="res://dev/add_block_card.gd" id="4_acnao"]
+[ext_resource type="Script" path="res://dev/remove_card_button.gd" id="5_me0ud"]
+
+[node name="HandDebugBox" type="PanelContainer" node_paths=PackedStringArray("hand")]
+offset_left = -938.0
+offset_top = -1245.0
+offset_right = -610.0
+offset_bottom = -1001.0
+script = ExtResource("1_2ordc")
+hand = NodePath("")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="handSize" type="RichTextLabel" parent="VBoxContainer"]
+layout_mode = 2
+text = "HandSize : 0"
+fit_content = true
+script = ExtResource("2_aicm7")
+
+[node name="AddAttackCard" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Add Attack Card"
+script = ExtResource("3_g2erq")
+
+[node name="AddBlockCard" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Add Block Card"
+script = ExtResource("4_acnao")
+
+[node name="Button2" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Remove Card (index 0)"
+script = ExtResource("5_me0ud")

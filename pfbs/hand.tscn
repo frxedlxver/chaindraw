@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://go4mh6n7jf7c"]
+
+[ext_resource type="Script" path="res://src/hand_node.gd" id="1_8o63e"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6nris"]
+radius = 1000.0
+
+[node name="Hand" type="Control" node_paths=PackedStringArray("debug_shape")]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_8o63e")
+hand_radius = 1000
+debug_shape = NodePath("DebugShape")
+max_card_spread_angle = 8.0
+max_spread_total = 75.0
+
+[node name="DebugShape" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_6nris")

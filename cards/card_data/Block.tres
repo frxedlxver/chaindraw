@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=3 format=3 uid="uid://47cfgqjl2pgy"]
+
+[ext_resource type="Texture2D" uid="uid://lxfa75jpqlov" path="res://sprites/card_art_block.png" id="1_pagyr"]
+[ext_resource type="Script" path="res://src/cards/card_data.gd" id="1_u0m71"]
+
+[resource]
+script = ExtResource("1_u0m71")
+title = "Block"
+description = "Blocks 5 Damage"
+cost = 1
+faceTex = ExtResource("1_pagyr")
+dealsDamage = false
+givesBlock = true
+inflictsEnemyStatus = false
+inflictsPlayerStatus = false
