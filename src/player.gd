@@ -7,6 +7,7 @@ signal energy_changed(new_energy)
 signal max_energy_changed(new_max_energy)
 signal block_changed(new_block)
 signal status_effects_changed()
+signal dead()
 
 # Backing variables
 var _max_health : int = 100
@@ -15,6 +16,7 @@ var _energy : int = 3
 var _max_energy : int = 3
 var _block : int = 0  # Damage reduction for one turn
 var status_effects : Array[StatusEffect]
+var max_hand_size : int = 5
 
 # Properties with getters and setters
 var max_health : int:
@@ -22,38 +24,38 @@ var max_health : int:
 		return _max_health
 	set(value):
 		_max_health = value
-		emit_signal("max_health_changed", _max_health)
+		max_health_changed.emit(_max_health)
 
 var current_health : int:
 	get:
 		return _current_health
 	set(value):
 		_current_health = value
-		emit_signal("current_health_changed", _current_health)
+		current_health_changed.emit(_current_health)
 
 var energy : int:
 	get:
 		return _energy
 	set(value):
 		_energy = value
-		emit_signal("energy_changed", _energy)
+		energy_changed.emit(_energy)
 
 var max_energy : int:
 	get:
 		return _max_energy
 	set(value):
 		_max_energy = value
-		emit_signal("max_energy_changed", _max_energy)
+		max_energy_changed.emit(_max_energy)
 
 var block : int:
 	get:
 		return _block
 	set(value):
 		_block = value
-		emit_signal("block_changed", _block)
+		block_changed.emit(block)
 
 func _ready():
-	# Initialization code
+	reset()
 	pass
 
 func reset():
@@ -63,7 +65,7 @@ func reset():
 	energy = max_energy
 	block = 0
 	status_effects.clear()
-	emit_signal("status_effects_changed")
+	status_effects_changed.emit()
 
 func take_damage(amount : int):
 	var damage_after_block = max(amount - block, 0)
@@ -95,16 +97,16 @@ func gain_energy(amount : int):
 	energy += amount
 	energy = min(energy, max_energy)
 
-func apply_status_effect(effect : StatusEffect):
+func apply_status_effect(_effect : StatusEffect):
 	pass
 	
 func remove_status_effect(effect_name : String):
 	if status_effects.has(effect_name):
 		status_effects.erase(effect_name)
-		emit_signal("status_effects_changed")
+		status_effects_changed.emit()
 
 func die():
-	pass #not yet implemented
+	dead.emit()
 
 func on_turn_start():
 	# Reset block at the start of each turn

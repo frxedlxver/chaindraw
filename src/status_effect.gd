@@ -12,7 +12,7 @@ var stacks : int
 var per_turn_change: int = 0  # Change in intensity per turn
 var timing: StatusTiming
 
-func apply_effect(target):
+func apply_effect(_target):
 	# To be overridden by subclasses
 	pass
 

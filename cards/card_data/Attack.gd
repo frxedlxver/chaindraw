@@ -6,7 +6,6 @@ func _init() -> void:
 	
 func use(battle_state : BattleData):
 	battle_state.cur_target.take_damage(damage)
-	battle_state.player.use_energy(cardData.cost)
 	
 func on_drawn_via_bond():
 	pass  # To be overridden by subclasses
@@ -17,5 +16,5 @@ func on_draw_bonded_card():
 func set_metadata(key: String, value):
 	metadata[key] = value
 
-func get_metadata(key: String, value):
+func get_metadata(key: String):
 	return metadata.get(key, null)

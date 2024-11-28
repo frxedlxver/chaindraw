@@ -1,0 +1,6 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://duw88kjrttj7p"]
+
+[ext_resource type="Shader" path="res://dev/card_art.gdshader" id="1_1asm5"]
+
+[resource]
+shader = ExtResource("1_1asm5")

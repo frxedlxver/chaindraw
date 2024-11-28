@@ -1,20 +1,15 @@
-[gd_scene load_steps=6 format=3 uid="uid://bmj1kay20v7mg"]
+[gd_scene load_steps=9 format=3 uid="uid://bmj1kay20v7mg"]
 
 [ext_resource type="Theme" uid="uid://om4spe0g6l8c" path="res://cards/theme_card.tres" id="1_fasgp"]
 [ext_resource type="Script" path="res://src/cards/card_node.gd" id="1_sa1af"]
-[ext_resource type="Texture2D" uid="uid://dsqtnjjljjxqp" path="res://sprites/cardborder.png" id="3_i3ryh"]
-[ext_resource type="FontFile" path="res://fonts/connection_ii/ConnectionII.tres" id="4_p2v7t"]
+[ext_resource type="Texture2D" uid="uid://c8dkg3bpo8omx" path="res://sprites/border.tres" id="3_mgafm"]
+[ext_resource type="Material" uid="uid://c2q0yw4vj3tee" path="res://sprites/new_shader_material.tres" id="4_1jgl1"]
+[ext_resource type="LabelSettings" uid="uid://7nouj2bbhusy" path="res://cards/card_font_settings.tres" id="4_8c5cj"]
+[ext_resource type="Texture2D" uid="uid://wn462figmee7" path="res://sprites/fill.tres" id="5_1qjj6"]
+[ext_resource type="Texture2D" uid="uid://dmx2x7fyqtqow" path="res://sprites/banner.tres" id="6_aldbh"]
+[ext_resource type="Material" uid="uid://duw88kjrttj7p" path="res://dev/card_art_sh_material.tres" id="8_hnbc1"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_rkogu"]
-line_spacing = 0.0
-font = ExtResource("4_p2v7t")
-font_size = 40
-font_color = Color(0.974333, 1, 0.89, 1)
-outline_size = 15
-outline_color = Color(0.054902, 0, 0.192157, 1)
-shadow_size = 0
-
-[node name="PanelContainer" type="PanelContainer"]
+[node name="PanelContainer" type="PanelContainer" node_paths=PackedStringArray("cost_label", "base_tex_rect", "card_art_tex_rect", "_targeting_line_base_pos_node")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -29,12 +24,29 @@ grow_vertical = 2
 pivot_offset = Vector2(100, 140)
 theme = ExtResource("1_fasgp")
 script = ExtResource("1_sa1af")
+cost_label = NodePath("BaseTexRect/Banner/CostLabel")
+base_tex_rect = NodePath("BaseTexRect")
+card_art_tex_rect = NodePath("CardArtRect")
+_targeting_line_base_pos_node = NodePath("TargetingLineBasePosition")
 
 [node name="BaseTexRect" type="TextureRect" parent="."]
 layout_mode = 2
-texture = ExtResource("3_i3ryh")
+texture = ExtResource("3_mgafm")
 
-[node name="CostLabel" type="Label" parent="BaseTexRect"]
+[node name="Fill" type="TextureRect" parent="BaseTexRect"]
+material = ExtResource("4_1jgl1")
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 280.0
+texture = ExtResource("5_1qjj6")
+
+[node name="Banner" type="TextureRect" parent="BaseTexRect"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 280.0
+texture = ExtResource("6_aldbh")
+
+[node name="CostLabel" type="Label" parent="BaseTexRect/Banner"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.08
@@ -46,14 +58,18 @@ offset_bottom = 0.0400009
 size_flags_horizontal = 0
 text = "0
 "
-label_settings = SubResource("LabelSettings_rkogu")
+label_settings = ExtResource("4_8c5cj")
 horizontal_alignment = 1
 autowrap_mode = 2
 uppercase = true
 max_lines_visible = 1
 
 [node name="CardArtRect" type="TextureRect" parent="."]
+material = ExtResource("8_hnbc1")
 layout_mode = 2
+
+[node name="TargetingLineBasePosition" type="Node2D" parent="."]
+position = Vector2(100, 0)
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

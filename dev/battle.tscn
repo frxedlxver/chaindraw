@@ -1,31 +1,135 @@
-[gd_scene load_steps=7 format=3 uid="uid://c4itt2vj444fs"]
+[gd_scene load_steps=19 format=3 uid="uid://c4itt2vj444fs"]
 
 [ext_resource type="PackedScene" uid="uid://go4mh6n7jf7c" path="res://pfbs/hand.tscn" id="1_ekkxk"]
 [ext_resource type="Script" path="res://dev/main.gd" id="1_ksy0d"]
+[ext_resource type="LabelSettings" uid="uid://ccxwb7dcymlvo" path="res://cards/defeat_font_settings.tres" id="2_rsdoe"]
 [ext_resource type="PackedScene" uid="uid://bimnncx3pq1xa" path="res://dev/hand_debug_box.tscn" id="2_y1ix0"]
+[ext_resource type="LabelSettings" uid="uid://dxuc3quiqq3fl" path="res://cards/victory_font_settings.tres" id="3_7wpd3"]
 [ext_resource type="Script" path="res://src/player.gd" id="3_wcn1n"]
 [ext_resource type="Script" path="res://src/battle/enemy_container.gd" id="5_21klo"]
 [ext_resource type="Script" path="res://src/battle/battle_controller.gd" id="5_hmish"]
+[ext_resource type="Script" path="res://src/battle/target_selector.gd" id="6_k5eun"]
+[ext_resource type="Script" path="res://dev/block_ui.gd" id="8_65nx2"]
+[ext_resource type="Script" path="res://dev/healthbar.gd" id="8_lil1g"]
+[ext_resource type="Script" path="res://dev/mana_ui.gd" id="9_l8nn0"]
+[ext_resource type="Texture2D" uid="uid://b64ckm8rqc1rs" path="res://sprites/block_icon.png" id="9_w5rau"]
+[ext_resource type="LabelSettings" uid="uid://20dsh77rvddw" path="res://cards/block_icon_font_settings.tres" id="12_qydtv"]
+[ext_resource type="Script" path="res://src/deck_handle.gd" id="15_cfj3f"]
+[ext_resource type="Texture2D" uid="uid://ceyhjjhjwcdun" path="res://sprites/cardback_border.tres" id="16_munr0"]
+[ext_resource type="Texture2D" uid="uid://d00iwyrr75mss" path="res://sprites/cardback_center.tres" id="17_t4w5h"]
+[ext_resource type="Texture2D" uid="uid://bu70qqk5oh31o" path="res://sprites/cardback_countarea.tres" id="18_5gkq3"]
 
 [node name="Main" type="Node" node_paths=PackedStringArray("hand", "player")]
 script = ExtResource("1_ksy0d")
 hand = NodePath("BattleController/Hand")
 player = NodePath("Player")
 
-[node name="HandDebugBox" parent="." node_paths=PackedStringArray("hand") instance=ExtResource("2_y1ix0")]
+[node name="DefeatScreen" type="Panel" parent="."]
+visible = false
+z_index = 1000
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="DefeatScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -100.0
+offset_right = 320.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "DEFEAT"
+label_settings = ExtResource("2_rsdoe")
+
+[node name="VictoryScreen" type="Panel" parent="."]
+visible = false
+z_index = 1000
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="VictoryScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -100.0
+offset_right = 320.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "VICTORY"
+label_settings = ExtResource("3_7wpd3")
+
+[node name="HandDebugBox" parent="." node_paths=PackedStringArray("hand", "deck_handle") instance=ExtResource("2_y1ix0")]
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 0.0
-offset_top = -244.0
-offset_right = 328.0
-offset_bottom = 0.0
+offset_left = 13.0
+offset_top = -260.0
+offset_right = 341.0
+offset_bottom = -16.0
 grow_vertical = 0
 hand = NodePath("../BattleController/Hand")
+deck_handle = NodePath("../BattleController/DeckHandle")
 
-[node name="BattleController" type="Node" parent="." node_paths=PackedStringArray("hand")]
+[node name="BattleController" type="Node" parent="." node_paths=PackedStringArray("hand", "deck", "target_selector")]
 script = ExtResource("5_hmish")
 hand = NodePath("Hand")
+deck = NodePath("DeckHandle")
+target_selector = NodePath("TargetSelector")
+
+[node name="DeckHandle" type="Control" parent="BattleController" node_paths=PackedStringArray("count_label")]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 347.0
+offset_top = 739.0
+offset_right = 347.0
+offset_bottom = 739.0
+script = ExtResource("15_cfj3f")
+count_label = NodePath("AspectRatioContainer/CountArea/Label")
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="BattleController/DeckHandle"]
+layout_mode = 0
+offset_right = 173.0
+offset_bottom = 208.0
+
+[node name="Border" type="TextureRect" parent="BattleController/DeckHandle/AspectRatioContainer"]
+layout_mode = 2
+texture = ExtResource("16_munr0")
+stretch_mode = 5
+
+[node name="Center" type="TextureRect" parent="BattleController/DeckHandle/AspectRatioContainer"]
+layout_mode = 2
+texture = ExtResource("17_t4w5h")
+stretch_mode = 5
+
+[node name="CountArea" type="TextureRect" parent="BattleController/DeckHandle/AspectRatioContainer"]
+layout_mode = 2
+texture = ExtResource("18_5gkq3")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="BattleController/DeckHandle/AspectRatioContainer/CountArea"]
+layout_mode = 0
+offset_left = 114.0
+offset_top = 129.5
+offset_right = 154.0
+offset_bottom = 152.5
+text = "0"
+label_settings = ExtResource("12_qydtv")
 
 [node name="Hand" parent="BattleController" instance=ExtResource("1_ekkxk")]
 offset_left = 1126.0
@@ -37,5 +141,83 @@ offset_bottom = 1748.0
 position = Vector2(1155, 428)
 script = ExtResource("5_21klo")
 
+[node name="TargetSelector" type="Line2D" parent="BattleController"]
+top_level = true
+z_index = 100
+script = ExtResource("6_k5eun")
+
+[node name="Button" type="Button" parent="BattleController"]
+offset_left = 11.0
+offset_top = 737.0
+offset_right = 213.0
+offset_bottom = 792.0
+text = "end turn"
+
 [node name="Player" type="Node" parent="."]
 script = ExtResource("3_wcn1n")
+
+[node name="PanelContainer" type="Panel" parent="."]
+offset_left = 10.0
+offset_top = 577.0
+offset_right = 398.0
+offset_bottom = 705.0
+
+[node name="ManaUI" type="Label" parent="PanelContainer"]
+layout_mode = 2
+offset_top = 75.0
+offset_right = 387.0
+offset_bottom = 98.0
+horizontal_alignment = 1
+script = ExtResource("9_l8nn0")
+
+[node name="Healthbar" type="ProgressBar" parent="PanelContainer"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 21.125
+offset_right = 150.0
+offset_bottom = 48.125
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+value = 100.0
+script = ExtResource("8_lil1g")
+
+[node name="BlockUI" type="TextureRect" parent="PanelContainer/Healthbar"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -29.0
+offset_top = -17.0
+offset_right = 35.0
+offset_bottom = 47.0
+grow_horizontal = 0
+texture = ExtResource("9_w5rau")
+stretch_mode = 2
+script = ExtResource("8_65nx2")
+
+[node name="Label" type="Label" parent="PanelContainer/Healthbar/BlockUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -0.5
+offset_top = -11.5
+offset_right = 0.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "asd"
+label_settings = ExtResource("12_qydtv")
+
+[connection signal="pressed" from="BattleController/Button" to="BattleController" method="_on_button_pressed"]
+[connection signal="block_changed" from="Player" to="PanelContainer/Healthbar/BlockUI" method="_on_player_block_changed"]
+[connection signal="current_health_changed" from="Player" to="PanelContainer/Healthbar" method="_on_player_current_health_changed"]
+[connection signal="energy_changed" from="Player" to="PanelContainer/ManaUI" method="_on_player_energy_changed"]
+[connection signal="max_energy_changed" from="Player" to="PanelContainer/ManaUI" method="_on_player_max_energy_changed"]
+[connection signal="max_health_changed" from="Player" to="PanelContainer/Healthbar" method="_on_player_max_health_changed"]

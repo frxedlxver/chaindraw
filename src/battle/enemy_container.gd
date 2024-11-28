@@ -9,7 +9,9 @@ func set_enemy_positions(num_enemies: int):
 	enemy_count = 0
 
 func add_enemy(enemy: Enemy) -> bool:
+	
 	if enemy_count < enemy_positions.size():
+		print(enemy_count)
 		self.add_child(enemy)
 		enemy.position = enemy_positions[enemy_count]
 		enemy_count += 1
@@ -34,16 +36,16 @@ func get_grid_positions(num_enemies: int, columns: int = 2) -> Array[Vector2]:
 	var positions: Array[Vector2] = []
 	var spacing_x = 150
 	var spacing_y = 150
-	var rows = ceil(num_enemies / columns)
-	var start_x = -((columns - 1) * spacing_x) / 2
-	var start_y = -((rows - 1) * spacing_y) / 2
+	var rows = ceil(num_enemies / float(columns))
+	var start_x = -((columns - 1) * spacing_x) / 2.0
+	var start_y = -((rows - 1) * spacing_y) / 2.0
 	var index = 0
 	for row in rows:
 		for column in columns:
 			if index >= num_enemies:
 				break
-			var position = Vector2(start_x + column * spacing_x, start_y + row * spacing_y)
-			positions.append(position)
+			var pos = Vector2(start_x + column * spacing_x, start_y + row * spacing_y)
+			positions.append(pos)
 			index += 1
 	return positions
 
@@ -53,6 +55,6 @@ func get_circle_positions(num_enemies: int) -> Array[Vector2]:
 	var center = Vector2.ZERO
 	for i in num_enemies:
 		var angle = (PI * 2 / num_enemies) * i
-		var position = center + Vector2(cos(angle), sin(angle)) * radius
-		positions.append(position)
+		var pos = center + Vector2(cos(angle), sin(angle)) * radius
+		positions.append(pos)
 	return positions

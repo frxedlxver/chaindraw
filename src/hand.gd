@@ -6,10 +6,6 @@ var max_hand_size : int = 1000
 var card_count : int:
 	get: return cards.values().size()
 
-
-func is_full() -> bool:
-	return card_count >= max_hand_size
-
 # returns true if card added successfully, else false
 func add_card(card_with_id : CardWithID) -> bool:
 	if card_count >= max_hand_size:
@@ -18,10 +14,8 @@ func add_card(card_with_id : CardWithID) -> bool:
 	cards[card_with_id.card_id] = card_with_id
 	return true
 
-func remove_at(index : int):
-	# index oob, return false
-	if cards.keys().size() <= index:
-		return false
+func pop_at_index(index : int):
+
 	
 	# get key of target
 	var to_remove_key = cards.keys()[index]

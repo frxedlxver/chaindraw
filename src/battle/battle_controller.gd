@@ -3,52 +3,48 @@ class_name BattleController
 
 # Enumeration for the different phases of the battle
 enum BattlePhase {
+	START,
 	PLAYER_TURN,
-	TARGETING,
 	ENEMY_TURN,
 	VICTORY,
 	DEFEAT
 }
 
-signal exit_battle_phase(BattlePhase)
-signal enter_battle_phase(BattlePhase)
+signal exit_battle_phase(old_phase: BattlePhase)
+signal enter_battle_phase(new_phase: BattlePhase)
 
 # Current phase of the battle
 var phase: BattlePhase
-
-# Data container for the battle, including player and enemies
 var battle_data: BattleData
-
-# Reference to the player's hand UI component
 @export var hand: HandNode
+@export var deck: DeckHandle
+@export var target_selector: TargetSelector
 
-# The card currently being played
-var active_card: CardNode
-
-# Manages target selection during the targeting phase
-var target_selector: TargetSelector
+# The card currently being played (used when targeting)
+var active_card: CardNode = null
 
 func initialize_battle(player: Player, enemies: Array[Enemy]):
-	self.hand = hand
 	battle_data = BattleData.new(player, enemies)
+	battle_data.player.dead.connect(_on_player_dead)
 
 	# Initialize the target selector with the list of enemies
-	target_selector = TargetSelector.new(battle_data.enemies)
-	self.add_child(target_selector)
+	target_selector.initialize(battle_data.enemies)
 
-	# Connect the card activation signal from the hand to the handler
-	hand.card_activated.connect(_on_hand_card_activated)
+	# Connect the card clicked signal from the hand to the handler
+	hand.card_clicked.connect(_on_card_clicked)
+
+	# Set enemy positions and add them to the scene
 	$EnemyContainer.set_enemy_positions(enemies.size())
 	for enemy in enemies:
 		$EnemyContainer.add_enemy(enemy)
+		enemy.dead.connect(_on_enemy_dead)
 
-# Starts the battle by setting the initial phase
 func start_battle():
-	set_phase(BattlePhase.PLAYER_TURN)
+	set_phase(BattlePhase.START)
+
 
 ############ PHASE FUNCTIONS ############
 
-# Sets the current phase of the battle
 func set_phase(new_phase: BattlePhase):
 	# Exit the current phase
 	exit_phase(phase)
@@ -57,16 +53,24 @@ func set_phase(new_phase: BattlePhase):
 	# Enter the new phase
 	enter_phase(phase)
 
-# Handles entering a new phase
 func enter_phase(new_phase: BattlePhase):
 	match new_phase:
+		BattlePhase.START:
+			deck.on_battle_start()
+			set_phase(BattlePhase.PLAYER_TURN)
 		BattlePhase.PLAYER_TURN:
-			# Player's turn begins
+			while (hand.hand.card_count < battle_data.player.max_hand_size) \
+				and deck.card_count > 0:
+				hand.add_card(deck.draw_from_top())
 			battle_data.player.on_turn_start()
 		BattlePhase.ENEMY_TURN:
 			# Each enemy's turn begins
 			for enemy in battle_data.enemies:
 				enemy.on_turn_start()
+			for enemy : Enemy in battle_data.enemies:
+				enemy.attack(battle_data)
+				await enemy.animation_finished
+			set_phase(BattlePhase.PLAYER_TURN)
 		BattlePhase.VICTORY:
 			# Victory state logic
 			pass
@@ -75,7 +79,6 @@ func enter_phase(new_phase: BattlePhase):
 			pass
 	enter_battle_phase.emit(new_phase)
 
-# Handles exiting the current phase
 func exit_phase(old_phase: BattlePhase):
 	match old_phase:
 		BattlePhase.PLAYER_TURN:
@@ -93,14 +96,14 @@ func exit_phase(old_phase: BattlePhase):
 			pass
 	exit_battle_phase.emit(old_phase)
 
-# Processes logic each frame based on the current phase
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	match phase:
 		BattlePhase.PLAYER_TURN:
 			# Logic for player's turn (if any)
 			pass
 		BattlePhase.ENEMY_TURN:
-			set_phase(BattlePhase.PLAYER_TURN)
+			# Logic for enemy's turn
+			pass
 		BattlePhase.VICTORY:
 			# Logic during victory state
 			pass
@@ -110,26 +113,27 @@ func _process(delta: float) -> void:
 
 ############ EVENT HANDLERS ############
 
-# Called when a card is activated from the player's hand
-func _on_hand_card_activated(card_node: CardNode):
+func _on_card_clicked(card_node: CardNode):
+	# Check if there is already an active card
+	if active_card != null:
+		return  # Ignore clicks when a card is active
+
 	# Check if the player has enough energy to use the card
 	if battle_data.player.energy < card_node.card_base.cardData.cost:
 		# Not enough energy; flash the card red
 		card_node.flash_red()
 		return
 
-	# Set the active card to the one played
+	# Set the clicked card as active
 	active_card = card_node
+	card_node.select()
 
-	# Check if the card requires target selection
+	# Proceed to target selection or use the card
 	if card_node.card_base.cardData.target_type == CardData.TargetType.SINGLE_ENEMY:
-		# Enter target selection mode
 		_do_target_selection(card_node)
 	else:
-		# No target required; activate the card immediately
 		_use_card(card_node)
 
-# Initiates target selection mode for the card
 func _do_target_selection(card_node: CardNode):
 	# Activate the target selector with the current card
 	target_selector.activate(card_node)
@@ -137,36 +141,48 @@ func _do_target_selection(card_node: CardNode):
 	target_selector.target_selected.connect(_on_card_target_selected)
 	target_selector.clicked_outside_target.connect(_exit_target_selection)
 
-# Called when a target is selected
 func _on_card_target_selected(target: Enemy):
 	# Set the current target in battle data
-	battle_data.cur_target = target_selector.cur_target
+	battle_data.cur_target = target
 	# Use the active card on the selected target
 	_use_card(active_card)
 	# Exit target selection mode
 	_exit_target_selection()
 
-# Activates the card's effect and removes it from the hand
 func _use_card(card_node: CardNode):
 	# Activate the card with the battle data context
-	card_node.activate(battle_data)
+	card_node.use(battle_data)
+	# Deduct the card's cost from the player's energy
+	battle_data.player.use_energy(card_node.cost)
 	# Remove the card from the player's hand
-	var id = hand.hand.get_card_id_if_exists(active_card)
-	var index = hand.hand.cards.keys().find(id)
-	var card = hand.take_card(index)
+	var card_with_id = hand.take_card_by_entity(card_node)
 	# Free the card node to remove it from the scene
-	card.card.queue_free()
+	card_with_id.card.queue_free()
 	# Clear the active card reference
 	active_card = null
 
-# Exits target selection mode and disconnects signals
 func _exit_target_selection():
 	# Deactivate the target selector
 	target_selector.deactivate()
+	# Deselect the active card
+	if active_card:
+		active_card.deselect()
+		active_card = null
 	# Disconnect the signals to prevent multiple connections
 	target_selector.target_selected.disconnect(_on_card_target_selected)
 	target_selector.clicked_outside_target.disconnect(_exit_target_selection)
-	
-func _end_turn_button_pressed():
+
+func _on_enemy_dead(enemy : Enemy):
+	var enemy_idx = battle_data.enemies.find(enemy)
+	battle_data.enemies.remove_at(enemy_idx)
+	enemy.queue_free()
+	if battle_data.enemies.size() == 0:
+		set_phase(BattlePhase.VICTORY)
+		
+func _on_player_dead():
+	set_phase(BattlePhase.DEFEAT)
+
+
+func _on_button_pressed() -> void:
 	if phase == BattlePhase.PLAYER_TURN:
 		set_phase(BattlePhase.ENEMY_TURN)

@@ -1,0 +1,18 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://c2q0yw4vj3tee"]
+
+[ext_resource type="Shader" path="res://sprites/new_shader.gdshader" id="1_bbxpd"]
+
+[resource]
+shader = ExtResource("1_bbxpd")
+shader_parameter/small_stars = 50.0
+shader_parameter/small_stars_far_size = 0.3
+shader_parameter/small_stars_near_size = 0.3
+shader_parameter/large_stars = 14.96
+shader_parameter/large_stars_far_size = 0.3
+shader_parameter/large_stars_near_size = 0.3
+shader_parameter/far_stars_color = Color(0.857625, 0.703755, 0.638698, 1)
+shader_parameter/near_stars_color = Color(0.494118, 0.341176, 1, 1)
+shader_parameter/base_scroll_speed = 0.05
+shader_parameter/additional_scroll_speed = 0.05
+shader_parameter/twinkle_speed = 1.245
+shader_parameter/twinkle_intensity = 0.705

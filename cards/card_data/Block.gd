@@ -15,5 +15,5 @@ func on_draw_bonded_card():
 func set_metadata(key: String, value):
 	metadata[key] = value
 
-func get_metadata(key: String, value):
+func get_metadata(key: String):
 	return metadata.get(key, null)

@@ -4,6 +4,6 @@ var player : Player
 var enemies : Array[Enemy]
 var cur_target
 
-func _init(player : Player, enemies : Array[Enemy]):
-	self.player = player
-	self.enemies = enemies
+func _init(player_node : Player, enemies_list : Array[Enemy]):
+	self.player = player_node
+	self.enemies = enemies_list
