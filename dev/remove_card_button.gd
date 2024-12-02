@@ -6,5 +6,5 @@ extends Button
 func _pressed() -> void:
 	var card = hand.take_card(0)
 	
-	if card and card is CardWithID:
-		card.card.queue_free()
+	if card is CardNode:
+		card.queue_free()

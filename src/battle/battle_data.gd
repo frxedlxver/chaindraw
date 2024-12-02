@@ -1,6 +1,7 @@
 class_name BattleData
 
 var player : Player
+var battle_deck : DeckHandle
 var enemies : Array[Enemy]
 var cur_target
 

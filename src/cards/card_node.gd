@@ -7,8 +7,10 @@ var card_base: CardLogic  # Reference to the underlying CardLogic instance
 @export var base_tex_rect : TextureRect
 @export var card_art_tex_rect : TextureRect
 @export var _targeting_line_base_pos_node : Node2D
+
 var targeting_line_base_pos : Vector2:
 	get: return _targeting_line_base_pos_node.global_position
+
 enum CardState {
 	NORMAL,   # In hand, not interacted with
 	HOVERED,  # Mouse is over the card
@@ -16,17 +18,26 @@ enum CardState {
 }
 
 var current_state: CardState = CardState.NORMAL
-
 const DEFAULT_COLOR: Color = Color.WHITE
-
 var flash_tween: Tween
+var angle_in_hand: float = 0
+
 
 signal card_clicked(CardNode)
 
-var angle_in_hand: float = 0
-
 var cost : int:
 	get: return card_base.cardData.cost
+
+var chain_effects : Array[ChainEffect] = []
+
+var drawn_via_chain : bool:
+	get: return _drawn_via_chain
+	set(v):
+		_drawn_via_chain = v
+		if _drawn_via_chain:
+			self.base_tex_rect.self_modulate = Color.RED
+
+var _drawn_via_chain : bool
 
 func _ready():
 	update_visual_components()
@@ -37,7 +48,11 @@ func _gui_input(event: InputEvent) -> void:
 			card_clicked.emit(self)
 
 func use(battle_state : BattleData):
+	for chain_effect in chain_effects:
+		chain_effect.before_play(self, battle_state)
 	card_base.use(battle_state)
+	for chain_effect in chain_effects:
+		chain_effect.after_play(self, battle_state)
 	
 func _on_mouse_entered() -> void:
 	if current_state == CardState.NORMAL:

@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://c5k6c46hg4lxw"]
+[gd_scene load_steps=10 format=3 uid="uid://c5k6c46hg4lxw"]
 
-[ext_resource type="Script" path="res://src/enemy.gd" id="1_jfxw3"]
-[ext_resource type="SpriteFrames" uid="uid://hteeam6tcv3y" path="res://dev/sprites/placeholder.tres" id="2_2vm33"]
-[ext_resource type="Script" path="res://dev/enemy_healthbar.gd" id="2_kxlh7"]
-[ext_resource type="LabelSettings" uid="uid://20dsh77rvddw" path="res://cards/block_icon_font_settings.tres" id="3_431li"]
+[ext_resource type="Script" path="res://src/enemy.gd" id="1_8japl"]
+[ext_resource type="Script" path="res://dev/enemy_healthbar.gd" id="2_vb1mp"]
+[ext_resource type="PackedScene" uid="uid://jh4j5ek1firl" path="res://dev/block_ui.tscn" id="3_he6nf"]
+[ext_resource type="LabelSettings" uid="uid://20dsh77rvddw" path="res://cards/block_icon_font_settings.tres" id="4_ny4wr"]
+[ext_resource type="SpriteFrames" uid="uid://hteeam6tcv3y" path="res://dev/sprites/placeholder.tres" id="5_0mn3x"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hefqp"]
 border_width_left = 2
@@ -36,7 +37,7 @@ radius = 62.0
 height = 196.0
 
 [node name="Enemy" type="Node2D"]
-script = ExtResource("1_jfxw3")
+script = ExtResource("1_8japl")
 max_health = 40
 
 [node name="HealthBar" type="ProgressBar" parent="."]
@@ -47,7 +48,18 @@ offset_bottom = -103.0
 theme = SubResource("Theme_viljc")
 value = 100.0
 show_percentage = false
-script = ExtResource("2_kxlh7")
+script = ExtResource("2_vb1mp")
+
+[node name="BlockUI" parent="HealthBar" instance=ExtResource("3_he6nf")]
+layout_mode = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_right = 0.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 64.0
+offset_bottom = 64.0
+grow_horizontal = 1
 
 [node name="Label" type="Label" parent="HealthBar"]
 layout_mode = 1
@@ -62,11 +74,11 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-label_settings = ExtResource("3_431li")
+label_settings = ExtResource("4_ny4wr")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(3, 3)
-sprite_frames = ExtResource("2_2vm33")
+sprite_frames = ExtResource("5_0mn3x")
 animation = &"idle"
 frame = 3
 frame_progress = 1.0
@@ -76,6 +88,7 @@ frame_progress = 1.0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("CapsuleShape2D_n48ga")
 
+[connection signal="block_changed" from="." to="HealthBar/BlockUI" method="_on_target_block_changed"]
 [connection signal="health_changed" from="." to="HealthBar" method="_on_enemy_health_changed"]
 [connection signal="max_health_changed" from="." to="HealthBar" method="_on_enemy_max_health_changed"]
 [connection signal="mouse_shape_entered" from="Area2D" to="." method="_on_area_2d_mouse_shape_entered"]

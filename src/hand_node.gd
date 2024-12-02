@@ -20,15 +20,14 @@ signal card_clicked(card_node: CardNode)
 
 const HAND_CENTER_ANGLE_IN_DEG: float = -90
 
-func add_card(card_with_id: CardWithID) -> bool:
+func add_card(card_to_add: CardNode) -> bool:
 	# Add card to hand data object
-	hand.add_card(card_with_id)
-	var card: CardNode = card_with_id.card
+	hand.add_card(card_to_add)
 	# Connect signals
-	card.card_clicked.connect(_on_card_clicked)
+	card_to_add.card_clicked.connect(_on_card_clicked)
 	# Add the card to the scene tree
-	add_child(card_with_id.card)
-	print("Adding card with ID %d" % card_with_id.card_id)
+	add_child(card_to_add)
+	print("Adding card with ID %d" % card_to_add.card_base.id)
 	# Update card positions and rotation
 	reposition_cards()
 	return true
@@ -46,19 +45,19 @@ func reposition_cards():
 	# Position each card around the calculated starting angle
 	for i in range(hand.card_count):
 		var current_angle = start_angle + i * card_spread
-		var card = hand.cards.values()[i].card
+		var card = hand.cards.values()[i]
 		update_card_transform(card, current_angle)
 
-func take_card_by_entity(card_node: CardNode) -> CardWithID:
-	var id = hand.get_card_id_if_exists(card_node)
+func take_card_by_entity(card_node: CardNode) -> CardNode:
+	var id = card_node.card_base.id
 	var index = hand.cards.keys().find(id)
 	var card_with_id = take_card(index)
 	return card_with_id
 
-func take_card(index: int) -> CardWithID:
+func take_card(index: int) -> CardNode:
 	var result = hand.pop_at_index(index)
-	result.card.card_clicked.disconnect(_on_card_clicked)
-	remove_child(result.card)
+	result.card_clicked.disconnect(_on_card_clicked)
+	remove_child(result)
 	reposition_cards()
 	return result
 

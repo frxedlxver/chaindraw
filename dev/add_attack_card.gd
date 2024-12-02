@@ -4,4 +4,4 @@ extends Button
 
 func _pressed() -> void:
 	var card = CardFactory.create_card(Attack)
-	hand.add_card(CardWithID.new(card, CardFactory.get_next_card_id()))
+	hand.add_card(card)

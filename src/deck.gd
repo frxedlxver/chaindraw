@@ -2,21 +2,16 @@ class_name Deck extends RefCounted
 
 var cards : Dictionary = {}
 
-
-
-var _id_counter : int = 0
-
 func add_card(card : CardNode):
-	var id = CardFactory.get_next_card_id()
-	cards[id] = CardWithID.new(card, id)
+	cards[card.card_base.id] = card
 
 func remove_card(card_id : int):
 	cards.erase(card_id)
 
-func update_card(card_with_id : CardWithID):
-	cards[card_with_id.card_id] = card_with_id
+func transform_card(new_card : CardNode):
+	cards[new_card.card_base.card_id] = new_card
 	
-func get_card(card_id):
+func get_card(card_id : int):
 	if cards.has(card_id):
 		return cards.get(card_id)
 

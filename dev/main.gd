@@ -6,7 +6,7 @@ class_name Main extends Node
 @onready var defeat_screen : Panel = $DefeatScreen
 @onready var victory_screen : Panel = $VictoryScreen
 
-var enemy_scene : PackedScene = preload("res://enemies/jackie.tscn")
+@export var enemy_scene : PackedScene
 
 var battle : BattleController
 # Called when the node enters the scene tree for the first time.
@@ -17,6 +17,8 @@ func _ready() -> void:
 		enemy_scene.instantiate(),
 	]
 	battle = $BattleController
+	player.reset()
+	player.deck = DebugDeckLoader.get_deck()
 	battle.enter_battle_phase.connect(_on_enter_battle_phase)
 	battle.initialize_battle(player, enemies)
 	battle.start_battle()

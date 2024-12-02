@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=6 format=3 uid="uid://ndggh3gij5p1"]
+
+[ext_resource type="Texture2D" uid="uid://8fjkhdtkj3gf" path="res://sprites/card_art_feint.png" id="1_bpprd"]
+[ext_resource type="Script" path="res://src/cards/chain_effect.gd" id="1_opiyl"]
+[ext_resource type="Script" path="res://cards/card_data/chain_effects/feint_chain_effect.gd" id="2_b5mjy"]
+[ext_resource type="Script" path="res://src/cards/card_data.gd" id="2_cak46"]
+
+[sub_resource type="Resource" id="Resource_ywd5q"]
+script = ExtResource("2_b5mjy")
+
+[resource]
+script = ExtResource("2_cak46")
+title = "Feint"
+description = "Does Nothing"
+cost = 1
+faceTex = ExtResource("1_bpprd")
+target_type = 0
+dealsDamage = false
+givesBlock = false
+inflictsEnemyStatus = false
+inflictsPlayerStatus = false
+chain_effects_to_pass = Array[ExtResource("1_opiyl")]([SubResource("Resource_ywd5q")])

@@ -17,6 +17,7 @@ var _max_energy : int = 3
 var _block : int = 0  # Damage reduction for one turn
 var status_effects : Array[StatusEffect]
 var max_hand_size : int = 5
+var deck : Deck
 
 # Properties with getters and setters
 var max_health : int:
@@ -66,6 +67,10 @@ func reset():
 	block = 0
 	status_effects.clear()
 	status_effects_changed.emit()
+	deck = Deck.new()
+	
+func load_deck(deck_to_load : Deck):
+	self.deck = deck_to_load
 
 func take_damage(amount : int):
 	var damage_after_block = max(amount - block, 0)
@@ -74,6 +79,12 @@ func take_damage(amount : int):
 	current_health = max(current_health, 0)
 	if current_health == 0:
 		die()
+	
+	# visual effects for damage taken
+	if block > 0:
+		pass
+	else:
+		pass
 
 func gain_block(amount : int):
 	block += amount
@@ -108,6 +119,10 @@ func remove_status_effect(effect_name : String):
 func die():
 	dead.emit()
 
+func on_battle_start():
+	block = 0;
+	refill_energy()
+	
 func on_turn_start():
 	# Reset block at the start of each turn
 	block = 0

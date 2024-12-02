@@ -16,9 +16,11 @@ signal enter_battle_phase(new_phase: BattlePhase)
 # Current phase of the battle
 var phase: BattlePhase
 var battle_data: BattleData
-@export var hand: HandNode
-@export var deck: DeckHandle
+@export var hand : HandNode
+@export var deck_handle : DeckHandle
+@export var discard_handle : DeckHandle
 @export var target_selector: TargetSelector
+@export var end_turn_button : Button
 
 # The card currently being played (used when targeting)
 var active_card: CardNode = null
@@ -26,6 +28,7 @@ var active_card: CardNode = null
 func initialize_battle(player: Player, enemies: Array[Enemy]):
 	battle_data = BattleData.new(player, enemies)
 	battle_data.player.dead.connect(_on_player_dead)
+	battle_data.battle_deck = deck_handle
 
 	# Initialize the target selector with the list of enemies
 	target_selector.initialize(battle_data.enemies)
@@ -35,6 +38,7 @@ func initialize_battle(player: Player, enemies: Array[Enemy]):
 
 	# Set enemy positions and add them to the scene
 	$EnemyContainer.set_enemy_positions(enemies.size())
+	
 	for enemy in enemies:
 		$EnemyContainer.add_enemy(enemy)
 		enemy.dead.connect(_on_enemy_dead)
@@ -56,20 +60,46 @@ func set_phase(new_phase: BattlePhase):
 func enter_phase(new_phase: BattlePhase):
 	match new_phase:
 		BattlePhase.START:
-			deck.on_battle_start()
+			battle_data.player.on_battle_start()
+			
+			# initialize battledeck with info from player's main deck
+			battle_data.battle_deck.on_battle_start(battle_data.player.deck)
 			set_phase(BattlePhase.PLAYER_TURN)
 		BattlePhase.PLAYER_TURN:
-			while (hand.hand.card_count < battle_data.player.max_hand_size) \
-				and deck.card_count > 0:
-				hand.add_card(deck.draw_from_top())
+			
+			# timer for small delay between each card drawn
+			var t = Timer.new()
+			self.add_child(t)
+			
+			# draw from deck until hand is full
+			while (hand.hand.card_count < battle_data.player.max_hand_size):
+				
+				# handle empty deck
+				if battle_data.battle_deck.card_count == 0:
+					# will change this behavior eventually
+					break;
+				
+				# 
+				hand.add_card(battle_data.battle_deck.draw_from_top())
+				t.wait_time = 0.1
+				t.start()
+				await t.timeout
+			
+			# free the timer
+			self.remove_child(t)
+			t.queue_free()
+			
+			end_turn_button.disabled = false
+				
 			battle_data.player.on_turn_start()
 		BattlePhase.ENEMY_TURN:
 			# Each enemy's turn begins
 			for enemy in battle_data.enemies:
 				enemy.on_turn_start()
 			for enemy : Enemy in battle_data.enemies:
-				enemy.attack(battle_data)
-				await enemy.animation_finished
+				enemy.do_turn(battle_data)
+				if enemy.turn_in_progress:
+					await enemy.turn_finished
 			set_phase(BattlePhase.PLAYER_TURN)
 		BattlePhase.VICTORY:
 			# Victory state logic
@@ -154,10 +184,20 @@ func _use_card(card_node: CardNode):
 	card_node.use(battle_data)
 	# Deduct the card's cost from the player's energy
 	battle_data.player.use_energy(card_node.cost)
+	if card_node.card_base.next_in_chain != -1:
+		var card : CardNode = deck_handle.find_card_by_id(card_node.card_base.next_in_chain)
+		if !card:
+			card = deck_handle.find_card_by_id(card_node.card_base.next_in_chain)
+		if !card:
+			pass # check hand for card
+		if !card:
+			print("could not find card with id %d" % card_node.card_base.next_in_chain)
+		else:
+			card.chain_effects = card_node.card_base.cardData.chain_effects_to_pass
+			card.drawn_via_chain = true
+			hand.add_card(card)
 	# Remove the card from the player's hand
-	var card_with_id = hand.take_card_by_entity(card_node)
-	# Free the card node to remove it from the scene
-	card_with_id.card.queue_free()
+	hand.take_card_by_entity(card_node)
 	# Clear the active card reference
 	active_card = null
 
@@ -182,7 +222,7 @@ func _on_enemy_dead(enemy : Enemy):
 func _on_player_dead():
 	set_phase(BattlePhase.DEFEAT)
 
-
-func _on_button_pressed() -> void:
+func _on_end_turn_button_pressed() -> void:
 	if phase == BattlePhase.PLAYER_TURN:
 		set_phase(BattlePhase.ENEMY_TURN)
+	end_turn_button.disabled = true

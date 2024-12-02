@@ -7,11 +7,11 @@ var card_count : int:
 	get: return cards.values().size()
 
 # returns true if card added successfully, else false
-func add_card(card_with_id : CardWithID) -> bool:
+func add_card(card_node : CardNode) -> bool:
 	if card_count >= max_hand_size:
 		return false
 	
-	cards[card_with_id.card_id] = card_with_id
+	cards[card_node.card_base.id] = card_node
 	return true
 
 func pop_at_index(index : int):
@@ -20,7 +20,7 @@ func pop_at_index(index : int):
 	# get key of target
 	var to_remove_key = cards.keys()[index]
 	# cache target card to return it
-	var to_remove : CardWithID = cards.get(to_remove_key)
+	var to_remove : CardNode = cards.get(to_remove_key)
 	
 	# remove from hand and return card
 	cards.erase(to_remove_key)
@@ -35,10 +35,3 @@ func remove_card_by_id(card_id : int):
 	cards.erase(card_id)
 	
 	return to_remove
-
-# returns -1 if card not found in hand
-func get_card_id_if_exists(card_node : CardNode) -> int:
-	for card_with_id : CardWithID in cards.values():
-		if card_with_id.card == card_node:
-			return card_with_id.card_id
-	return -1

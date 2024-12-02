@@ -1,17 +1,17 @@
 class_name CardLogic
 
 var cardData: CardData
-var bondedTo: CardLogic = null
+var next_in_chain : int = -1
 var drawnViaBond: bool = false
+
+var _drawn_via_bond : bool = false
 var metadata: Dictionary = {}
+var id : int
+
+func _init(id : int):
+	self.id = id
 
 func use(_battle_state : BattleData):
-	pass  # To be overridden by subclasses
-
-func on_drawn_via_bond():
-	pass  # To be overridden by subclasses
-
-func on_draw_bonded_card():
 	pass  # To be overridden by subclasses
 
 func set_metadata(key: String, value):

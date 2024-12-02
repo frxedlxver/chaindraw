@@ -9,6 +9,7 @@ title = "Block"
 description = "Blocks 5 Damage"
 cost = 1
 faceTex = ExtResource("1_pagyr")
+target_type = 0
 dealsDamage = false
 givesBlock = true
 inflictsEnemyStatus = false

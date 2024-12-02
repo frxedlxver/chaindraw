@@ -15,3 +15,4 @@ enum TargetType {
 @export var givesBlock: bool = false
 @export var inflictsEnemyStatus: bool = false
 @export var inflictsPlayerStatus: bool = false
+@export var chain_effects_to_pass : Array[ChainEffect]
