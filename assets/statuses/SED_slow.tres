@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StatusEffectData" load_steps=3 format=3 uid="uid://c0wxg3x50jror"]
+
+[ext_resource type="Texture2D" uid="uid://dmvj3n0sup3qw" path="res://assets/sprites/statusicon_slow.png" id="1_lvask"]
+[ext_resource type="Script" path="res://src/statuses/status_effect_data.gd" id="1_ycwer"]
+
+[resource]
+script = ExtResource("1_ycwer")
+name = "Slow"
+stackable = true
+type = 1
+icon = ExtResource("1_lvask")

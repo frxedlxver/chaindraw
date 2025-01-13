@@ -1,6 +1,6 @@
 class_name EnemyHealthBar extends ProgressBar
 
-@onready var label : Label = $Label
+@export var label : Label
 
 var health : int
 var max_health : int

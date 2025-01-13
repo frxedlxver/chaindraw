@@ -1,0 +1,40 @@
+[gd_resource type="SpriteFrames" load_steps=5 format=3 uid="uid://cx0kiffdsto2m"]
+
+[ext_resource type="Texture2D" uid="uid://nh5h4qtgl0f4" path="res://assets/sprites/enemy_frog.png" id="1_miq36"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rv0aw"]
+atlas = ExtResource("1_miq36")
+region = Rect2(1053, 0, 1053, 999)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q24mj"]
+atlas = ExtResource("1_miq36")
+region = Rect2(2106, 0, 1053, 999)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e5d5b"]
+atlas = ExtResource("1_miq36")
+region = Rect2(0, 0, 1053, 999)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rv0aw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q24mj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rv0aw")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e5d5b")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]

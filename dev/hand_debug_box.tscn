@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://bimnncx3pq1xa"]
 
-[ext_resource type="Script" path="res://pfbs/hand_debug_box.gd" id="1_2ordc"]
-[ext_resource type="Script" path="res://pfbs/hand_size.gd" id="2_aicm7"]
+[ext_resource type="Script" path="res://dev/hand_debug_box.gd" id="1_2ordc"]
+[ext_resource type="Script" path="res://dev/hand_size.gd" id="2_aicm7"]
 [ext_resource type="Script" path="res://dev/add_attack_card.gd" id="3_g2erq"]
 [ext_resource type="Script" path="res://dev/add_block_card.gd" id="4_acnao"]
 [ext_resource type="Script" path="res://dev/remove_card_button.gd" id="5_me0ud"]

@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://d35ffri1wt4vf"]
+
+[ext_resource type="Texture2D" uid="uid://d2m1xrqn5g5ky" path="res://assets/sprites/cardborder-sheet.png" id="1_d5p16"]
+
+[resource]
+atlas = ExtResource("1_d5p16")
+region = Rect2(0, 336, 80, 112)

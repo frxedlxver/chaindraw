@@ -1,7 +1,5 @@
-
 # class to separate main deck from battle deck
 class_name DeckHandle extends Control
-
 
 @export var count_label : Label
 
@@ -16,6 +14,7 @@ signal is_empty()
 signal shuffled()
 signal card_drawn(card : CardNode)
 signal card_added(card : CardNode)
+signal clicked(DeckHandle)
 
 func on_battle_start(deck : Deck):
 	cards.assign(deck.get_cards())
@@ -71,3 +70,8 @@ func shuffle():
 	# may add visual component later
 	cards.shuffle()
 	shuffled.emit()
+	
+func _gui_input(event):
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			clicked.emit(self)

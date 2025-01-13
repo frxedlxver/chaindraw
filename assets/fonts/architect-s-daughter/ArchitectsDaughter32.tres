@@ -1,0 +1,9 @@
+[gd_resource type="DynamicFont" load_steps=2 format=2]
+
+[ext_resource type="DynamicFontData" uid="uid://b5uqq5afo6n6n" path="res://assets/fonts/architect-s-daughter/ArchitectsDaughter.ttf" id="1"]
+
+[resource]
+
+size = 32
+font_data = ExtResource( 1 )
+

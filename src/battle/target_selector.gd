@@ -49,12 +49,14 @@ func _on_mouse_entered_enemy(enemy : Enemy):
 func _on_mouse_exited_enemy(enemy : Enemy):
 	if cur_target == enemy:
 		cur_target = null
-		enemy.remove_hightlight()
-		self.default_color = Color.WHITE
+		print("target removed")
+	enemy.remove_hightlight()
+	self.default_color = Color.WHITE
 
 func _input(event: InputEvent) -> void:
 	if Util.event_is_lmb_press(event):
-		if cur_target:
+		if cur_target and cur_target is Enemy:
+			cur_target.remove_hightlight()
 			target_selected.emit(cur_target)
 		else:
 			clicked_outside_target.emit()

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StatusEffectData" load_steps=3 format=3 uid="uid://ijiropxdnlvj"]
+
+[ext_resource type="Script" path="res://src/statuses/status_effect_data.gd" id="1_8uvq4"]
+[ext_resource type="Texture2D" uid="uid://b64ckm8rqc1rs" path="res://assets/sprites/block_icon.png" id="1_fug6j"]
+
+[resource]
+script = ExtResource("1_8uvq4")
+name = "Block"
+stackable = true
+type = 0
+icon = ExtResource("1_fug6j")

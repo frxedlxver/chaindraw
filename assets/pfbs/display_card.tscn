@@ -1,0 +1,72 @@
+[gd_scene load_steps=8 format=3 uid="uid://l8y2r0lwrvkt"]
+
+[ext_resource type="Theme" uid="uid://om4spe0g6l8c" path="res://assets/styles/theme_card.tres" id="1_m7wv6"]
+[ext_resource type="Script" path="res://src/cards/display_card_node.gd" id="2_dn7gm"]
+[ext_resource type="Texture2D" uid="uid://c8dkg3bpo8omx" path="res://assets/sprites/border.tres" id="3_pqgn8"]
+[ext_resource type="Material" uid="uid://c2q0yw4vj3tee" path="res://assets/shaders/new_shader_material.tres" id="4_nopxf"]
+[ext_resource type="Texture2D" uid="uid://wn462figmee7" path="res://assets/sprites/fill.tres" id="5_5sq1y"]
+[ext_resource type="Texture2D" uid="uid://dmx2x7fyqtqow" path="res://assets/sprites/banner.tres" id="6_e8pk6"]
+[ext_resource type="Material" uid="uid://duw88kjrttj7p" path="res://assets/shaders/card_art_sh_material.tres" id="7_h7nmg"]
+
+[node name="DisplayCardNode" type="PanelContainer" node_paths=PackedStringArray("cost_label", "base_tex_rect", "card_art_tex_rect")]
+z_index = 300
+custom_minimum_size = Vector2(220, 300)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -140.0
+offset_right = 100.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(100, 140)
+theme = ExtResource("1_m7wv6")
+theme_type_variation = &"DisplayCard"
+script = ExtResource("2_dn7gm")
+cost_label = NodePath("BaseTexRect/Banner/CostLabel")
+base_tex_rect = NodePath("BaseTexRect")
+card_art_tex_rect = NodePath("CardArtRect")
+
+[node name="BaseTexRect" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("3_pqgn8")
+
+[node name="Fill" type="TextureRect" parent="BaseTexRect"]
+material = ExtResource("4_nopxf")
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 280.0
+texture = ExtResource("5_5sq1y")
+
+[node name="Banner" type="TextureRect" parent="BaseTexRect"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 280.0
+texture = ExtResource("6_e8pk6")
+
+[node name="CostLabel" type="Label" parent="BaseTexRect/Banner"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.08
+anchor_top = 0.093
+anchor_right = 0.21
+anchor_bottom = 0.282
+offset_top = -0.0400009
+offset_bottom = 0.0400009
+size_flags_horizontal = 0
+text = "0
+"
+horizontal_alignment = 1
+autowrap_mode = 2
+uppercase = true
+max_lines_visible = 1
+
+[node name="CardArtRect" type="TextureRect" parent="."]
+material = ExtResource("7_h7nmg")
+layout_mode = 2
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

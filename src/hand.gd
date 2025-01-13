@@ -2,21 +2,16 @@ class_name Hand extends RefCounted
 
 var cards : Dictionary = {}
 
-var max_hand_size : int = 1000
 var card_count : int:
 	get: return cards.values().size()
 
 # returns true if card added successfully, else false
 func add_card(card_node : CardNode) -> bool:
-	if card_count >= max_hand_size:
-		return false
 	
 	cards[card_node.card_base.id] = card_node
 	return true
 
-func pop_at_index(index : int):
-
-	
+func pop_at_index(index : int):	
 	# get key of target
 	var to_remove_key = cards.keys()[index]
 	# cache target card to return it

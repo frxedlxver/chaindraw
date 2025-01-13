@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bnp6d4qa2gt8k"]
+
+[ext_resource type="Theme" uid="uid://cbjolcouc8mm3" path="res://dev/player_panel_theme.tres" id="1_hofl7"]
+[ext_resource type="Script" path="res://dev/atb/turn_timer_ui.gd" id="1_tvoub"]
+
+[node name="TimeBar" type="ProgressBar"]
+theme = ExtResource("1_hofl7")
+theme_type_variation = &"TimeBar"
+value = 100.0
+script = ExtResource("1_tvoub")

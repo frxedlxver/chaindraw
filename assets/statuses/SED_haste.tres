@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StatusEffectData" load_steps=3 format=3 uid="uid://bq6ij37nhskl0"]
+
+[ext_resource type="Script" path="res://src/statuses/status_effect_data.gd" id="1_5gdpg"]
+[ext_resource type="Texture2D" uid="uid://dktc0qesvjjn8" path="res://assets/sprites/statusicon_haste.png" id="1_7a4cs"]
+
+[resource]
+script = ExtResource("1_5gdpg")
+name = "Haste"
+stackable = true
+type = 0
+icon = ExtResource("1_7a4cs")

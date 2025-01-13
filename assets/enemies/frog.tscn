@@ -1,0 +1,145 @@
+[gd_scene load_steps=11 format=3 uid="uid://jgor6yprtjke"]
+
+[ext_resource type="Script" path="res://assets/enemies/enemy_logic/frog.gd" id="1_wh5jp"]
+[ext_resource type="SpriteFrames" uid="uid://cx0kiffdsto2m" path="res://assets/spriteframes/spriteframes_frog.tres" id="2_moijc"]
+[ext_resource type="Theme" uid="uid://k535s03ufwlu" path="res://assets/styles/theme_enemy_battle_info.tres" id="3_yvusd"]
+[ext_resource type="Script" path="res://dev/enemy_healthbar.gd" id="4_gspdu"]
+[ext_resource type="LabelSettings" uid="uid://20dsh77rvddw" path="res://assets/styles/block_icon_font_settings.tres" id="5_kr4gg"]
+[ext_resource type="Script" path="res://dev/atb/turn_timer_ui.gd" id="6_6mdly"]
+[ext_resource type="Texture2D" uid="uid://bd7abfhjpssu2" path="res://assets/sprites/enemy_thoughtbubble.png" id="7_o4cbp"]
+[ext_resource type="Script" path="res://src/enemy_intent_ui.gd" id="8_fvhqa"]
+[ext_resource type="Texture2D" uid="uid://vampk4048wr2" path="res://assets/sprites/enemyintent_attack.png" id="9_h76pd"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_n48ga"]
+radius = 62.0
+height = 196.0
+
+[node name="Frog" type="Node2D" node_paths=PackedStringArray("main_sprite")]
+script = ExtResource("1_wh5jp")
+max_health = 55
+turn_length = 7.0
+main_sprite = NodePath("AnimatedSprite2D")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.16, 0.16)
+sprite_frames = ExtResource("2_moijc")
+animation = &"idle"
+frame_progress = 0.407047
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CapsuleShape2D_n48ga")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_yvusd")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI"]
+layout_mode = 0
+offset_left = -60.0
+offset_top = 100.0
+offset_right = 60.0
+offset_bottom = 128.0
+
+[node name="HealthBar" type="ProgressBar" parent="UI/VBoxContainer" node_paths=PackedStringArray("label")]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"HealthBar"
+value = 100.0
+show_percentage = false
+script = ExtResource("4_gspdu")
+label = NodePath("HealthLabel")
+
+[node name="HealthLabel" type="Label" parent="UI/VBoxContainer/HealthBar"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -8.0
+offset_right = 20.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0  /  0
+
+"
+label_settings = ExtResource("5_kr4gg")
+horizontal_alignment = 1
+
+[node name="Intent" type="TextureRect" parent="UI" node_paths=PackedStringArray("icon", "label")]
+layout_mode = 0
+offset_left = -158.0
+offset_top = -169.0
+offset_right = -30.0
+offset_bottom = -41.0
+texture = ExtResource("7_o4cbp")
+script = ExtResource("8_fvhqa")
+icon = NodePath("IntentIcon")
+label = NodePath("IntentAmountLabel")
+
+[node name="IntentIcon" type="TextureRect" parent="UI/Intent"]
+layout_mode = 0
+offset_left = 27.0
+offset_top = 17.0
+offset_right = 83.0
+offset_bottom = 93.0
+texture = ExtResource("9_h76pd")
+expand_mode = 3
+
+[node name="IntentAmountLabel" type="Label" parent="UI/Intent"]
+layout_mode = 0
+offset_left = 82.0
+offset_top = 47.0
+offset_right = 123.0
+offset_bottom = 72.0
+text = "0
+"
+label_settings = ExtResource("5_kr4gg")
+
+[node name="TimeBar" type="ProgressBar" parent="UI" node_paths=PackedStringArray("label")]
+z_index = -1
+layout_mode = 0
+offset_left = -29.0
+offset_top = -124.0
+offset_right = 91.0
+offset_bottom = -112.0
+size_flags_vertical = 3
+theme_type_variation = &"TimeBar"
+value = 100.0
+show_percentage = false
+script = ExtResource("6_6mdly")
+label = NodePath("Label")
+
+[node name="Label" type="Label" parent="UI/TimeBar"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -42.0
+offset_top = -29.5
+offset_right = 42.0
+offset_bottom = -6.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "0.00 / 0.00"
+label_settings = ExtResource("5_kr4gg")
+horizontal_alignment = 1
+
+[connection signal="health_changed" from="." to="UI/VBoxContainer/HealthBar" method="_on_enemy_health_changed"]
+[connection signal="intent_changed" from="." to="UI/Intent" method="_on_enemy_intent_changed"]
+[connection signal="max_health_changed" from="." to="UI/VBoxContainer/HealthBar" method="_on_enemy_max_health_changed"]
+[connection signal="time_in_turn_changed" from="." to="UI/TimeBar" method="_on_time_changed"]
+[connection signal="turn_length_changed" from="." to="UI/TimeBar" method="_on_max_time_changed"]
+[connection signal="mouse_shape_entered" from="Area2D" to="." method="_on_area_2d_mouse_shape_entered"]
+[connection signal="mouse_shape_exited" from="Area2D" to="." method="_on_area_2d_mouse_shape_exited"]

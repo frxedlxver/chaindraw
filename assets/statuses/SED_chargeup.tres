@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="StatusEffectData" load_steps=2 format=3 uid="uid://dn5ub1khicll1"]
+
+[ext_resource type="Script" path="res://src/statuses/status_effect_data.gd" id="1_mqjki"]
+
+[resource]
+script = ExtResource("1_mqjki")
+name = "ChargeUp"
+stackable = true
+type = 0
+decay_type = 1

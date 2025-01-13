@@ -6,7 +6,9 @@ signal current_health_changed(new_current_health)
 signal energy_changed(new_energy)
 signal max_energy_changed(new_max_energy)
 signal block_changed(new_block)
-signal status_effects_changed()
+signal statuses_changed(Array)
+signal block_decay_time_left_changed(float)
+signal block_decay_duration_changed(float)
 signal dead()
 
 # Backing variables
@@ -15,9 +17,11 @@ var _current_health : int = _max_health
 var _energy : int = 3
 var _max_energy : int = 3
 var _block : int = 0  # Damage reduction for one turn
-var status_effects : Array[StatusEffect]
+var statuses : Dictionary
 var max_hand_size : int = 5
 var deck : Deck
+var block_decay_duration : float = 5.0
+var block_decay_time_left : float = 0.0
 
 # Properties with getters and setters
 var max_health : int:
@@ -65,18 +69,27 @@ func reset():
 	current_health = max_health
 	energy = max_energy
 	block = 0
-	status_effects.clear()
-	status_effects_changed.emit()
+	statuses.clear()
+	statuses_changed.emit(statuses.values())
 	deck = Deck.new()
+	
+	# trigger signals for ui update
+	self.block_decay_duration_changed.emit(self.block_decay_duration)
 	
 func load_deck(deck_to_load : Deck):
 	self.deck = deck_to_load
 
 func take_damage(amount : int):
-	var damage_after_block = max(amount - block, 0)
+	var damage_after_statuses = amount
+	for status : StatusEffect in statuses.values():
+		damage_after_statuses = status.modify_owner_incoming_damage(damage_after_statuses)
+	
+	var damage_after_block = max(damage_after_statuses - block, 0)
 	block = max(block - amount, 0)
+	
 	current_health -= damage_after_block
 	current_health = max(current_health, 0)
+	
 	if current_health == 0:
 		die()
 	
@@ -85,7 +98,24 @@ func take_damage(amount : int):
 		pass
 	else:
 		pass
+		
+func deal_damage_to(target : Enemy, amount : int):
+	var damage_after_statuses = amount
+	
+	for status : StatusEffect in statuses.values():
+		damage_after_statuses = status.modify_owner_outgoing_damage(damage_after_statuses)
+	
+	target.take_damage(damage_after_statuses)
 
+func _managed_process(delta):
+	if self.block > 0:
+		self.block_decay_time_left -= delta
+		if self.block_decay_time_left <= 0.0:
+			self.block_decay_time_left = self.block_decay_duration
+			self.block -= 1
+		self.block_decay_time_left_changed.emit(self.block_decay_time_left)
+
+		
 func gain_block(amount : int):
 	block += amount
 	print("gained %d block for a total of %d block" % [amount, block])
@@ -108,14 +138,34 @@ func gain_energy(amount : int):
 	energy += amount
 	energy = min(energy, max_energy)
 
-func apply_status_effect(_effect : StatusEffect):
-	pass
+func add_status_effect(new_status : StatusEffect):
+	if statuses.has(new_status.data.name):
+		var cur_status = statuses[new_status.data.name]
+		cur_status.absorb_new_status(new_status)
+		statuses_changed.emit(statuses.values())
+	else:
+		if new_status is StackableStatusEffect:
+			new_status.stacks_updated.connect(on_status_stacks_changed)
+		statuses[new_status.data.name] = new_status
+		new_status.status_decayed.connect(on_status_decayed)
+		statuses_changed.emit(statuses.values())
 	
 func remove_status_effect(effect_name : String):
-	if status_effects.has(effect_name):
-		status_effects.erase(effect_name)
-		status_effects_changed.emit()
+	if statuses.has(effect_name):
+		statuses.erase(effect_name)
+		statuses_changed.emit(statuses.values())
 
+func on_status_decayed(decayed_status : StatusEffect):
+	statuses.erase(decayed_status.data.name)
+	statuses_changed.emit(statuses.values())
+	
+func on_status_stacks_changed(status : StackableStatusEffect):
+	statuses_changed.emit(statuses.values())
+	
+func on_meter_full():
+	for status : StatusEffect in statuses.values():
+		status.on_owner_meter_full(self)
+	
 func die():
 	dead.emit()
 

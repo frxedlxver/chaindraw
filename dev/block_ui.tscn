@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://jh4j5ek1firl"]
 
-[ext_resource type="Texture2D" uid="uid://b64ckm8rqc1rs" path="res://sprites/block_icon.png" id="1_a0w28"]
-[ext_resource type="Script" path="res://dev/block_ui.gd" id="2_duamn"]
-[ext_resource type="LabelSettings" uid="uid://20dsh77rvddw" path="res://cards/block_icon_font_settings.tres" id="3_amwoi"]
+[ext_resource type="Texture2D" uid="uid://b64ckm8rqc1rs" path="res://assets/sprites/block_icon.png" id="1_a0w28"]
+[ext_resource type="Script" path="res://dev/block_bar.gd" id="2_duamn"]
+[ext_resource type="LabelSettings" uid="uid://20dsh77rvddw" path="res://assets/styles/block_icon_font_settings.tres" id="3_amwoi"]
 
 [node name="BlockUI" type="TextureRect"]
 anchors_preset = 1

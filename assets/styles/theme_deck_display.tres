@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://bdd5lyssxy3ff"]
+
+[ext_resource type="StyleBox" uid="uid://dd86qk6l4pkgd" path="res://assets/styles/stylebox_deck_display_panel].tres" id="1_yn0ds"]
+
+[resource]
+DeckDisplayPanel/base_type = &"Panel"
+DeckDisplayPanel/styles/panel = ExtResource("1_yn0ds")

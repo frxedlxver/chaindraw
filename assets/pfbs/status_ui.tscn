@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://bwkbqp3oq13t2"]
+
+[ext_resource type="Script" path="res://dev/status_node_dev.gd" id="1_xjjaq"]
+
+[node name="StatusUi" type="PanelContainer" node_paths=PackedStringArray("title_label", "amount_label")]
+offset_right = 1.0
+offset_bottom = 23.0
+script = ExtResource("1_xjjaq")
+title_label = NodePath("HBoxContainer/TitleLabel")
+amount_label = NodePath("HBoxContainer/AmountLabel")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "StatusName"
+
+[node name="AmountLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "0"

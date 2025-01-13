@@ -1,1 +1,0 @@
-class_name DeckSaveDataManager extends Resource

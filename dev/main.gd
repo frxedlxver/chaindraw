@@ -18,7 +18,9 @@ func _ready() -> void:
 	]
 	battle = $BattleController
 	player.reset()
-	player.deck = DebugDeckLoader.get_deck()
+	var deck = DebugDeckLoader.get_deck()
+	CardSaveDataHandler.save_deck(deck)
+	player.deck = CardSaveDataHandler.load_deck()
 	battle.enter_battle_phase.connect(_on_enter_battle_phase)
 	battle.initialize_battle(player, enemies)
 	battle.start_battle()

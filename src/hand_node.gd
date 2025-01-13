@@ -31,6 +31,13 @@ func add_card(card_to_add: CardNode) -> bool:
 	# Update card positions and rotation
 	reposition_cards()
 	return true
+	
+func recheck_playable_cards(player_energy : int):
+	for card : CardNode in hand.cards.values():
+		if card.card_base.cardData.cost > player_energy:
+			card.playable = false
+		else:
+			card.playable = true
 
 func _on_card_clicked(card_node: CardNode):
 	# Emit signal to notify that a card has been clicked
@@ -73,8 +80,11 @@ func _process(_delta: float) -> void:
 		(debug_shape.shape as CircleShape2D).radius = hand_radius
 
 func update_card_transform(card_node: CardNode, card_angle: float):
+	var card_pos = calculate_card_position(card_angle)
 	card_node.reposition(
-		calculate_card_position(card_angle),
+		card_pos,
 		card_angle + 90
 	)
+	
+	card_node.set_card_anchor(card_pos, card_angle + 90)
 	card_node.angle_in_hand = card_angle + 90

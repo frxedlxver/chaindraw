@@ -1,0 +1,101 @@
+[gd_scene load_steps=9 format=3 uid="uid://bmj1kay20v7mg"]
+
+[ext_resource type="Theme" uid="uid://om4spe0g6l8c" path="res://assets/styles/theme_card.tres" id="1_fasgp"]
+[ext_resource type="Script" path="res://src/cards/card_node.gd" id="1_sa1af"]
+[ext_resource type="Texture2D" uid="uid://c8dkg3bpo8omx" path="res://assets/sprites/border.tres" id="3_mgafm"]
+[ext_resource type="Material" uid="uid://c2q0yw4vj3tee" path="res://assets/shaders/new_shader_material.tres" id="4_1jgl1"]
+[ext_resource type="Texture2D" uid="uid://wn462figmee7" path="res://assets/sprites/fill.tres" id="5_1qjj6"]
+[ext_resource type="Texture2D" uid="uid://dmx2x7fyqtqow" path="res://assets/sprites/banner.tres" id="6_aldbh"]
+[ext_resource type="Texture2D" uid="uid://d35ffri1wt4vf" path="res://assets/sprites/card_label.tres" id="8_fsapq"]
+[ext_resource type="Material" uid="uid://duw88kjrttj7p" path="res://assets/shaders/card_art_sh_material.tres" id="8_hnbc1"]
+
+[node name="CardNode" type="PanelContainer" node_paths=PackedStringArray("cost_label", "cardborder_tex", "card_art_tex_rect", "title_label", "_targeting_line_base_pos_node")]
+custom_minimum_size = Vector2(200, 280)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -960.0
+offset_top = -540.0
+offset_right = -760.0
+offset_bottom = -260.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(100, 140)
+theme = ExtResource("1_fasgp")
+script = ExtResource("1_sa1af")
+cost_label = NodePath("Border/Banner/CostLabel")
+cardborder_tex = NodePath("Border")
+card_art_tex_rect = NodePath("CardArtRect")
+title_label = NodePath("LabelArea/TitleLabel")
+_targeting_line_base_pos_node = NodePath("TargetingLineBasePosition")
+unplayable_border_color = Color(1, 0.65535, 0.601841, 1)
+unplayable_text_color = Color(1, 0.622435, 0.565199, 1)
+playable_border_color = Color(0.7134, 0.87, 0.77865, 1)
+
+[node name="Border" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("3_mgafm")
+
+[node name="Fill" type="TextureRect" parent="Border"]
+material = ExtResource("4_1jgl1")
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 280.0
+texture = ExtResource("5_1qjj6")
+
+[node name="Banner" type="TextureRect" parent="Border"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 280.0
+texture = ExtResource("6_aldbh")
+
+[node name="CostLabel" type="Label" parent="Border/Banner"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.08
+anchor_top = 0.093
+anchor_right = 0.21
+anchor_bottom = 0.282
+offset_top = -0.0400009
+offset_bottom = 0.0400009
+size_flags_horizontal = 0
+text = "0
+"
+horizontal_alignment = 1
+autowrap_mode = 2
+uppercase = true
+max_lines_visible = 1
+
+[node name="CardArtRect" type="TextureRect" parent="."]
+material = ExtResource("8_hnbc1")
+layout_mode = 2
+
+[node name="TargetingLineBasePosition" type="Node2D" parent="."]
+position = Vector2(100, 0)
+
+[node name="LabelArea" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("8_fsapq")
+
+[node name="TitleLabel" type="Label" parent="LabelArea"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -48.0
+offset_top = -54.0
+offset_right = 48.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 25
+text = "TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

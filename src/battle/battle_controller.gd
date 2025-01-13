@@ -144,9 +144,12 @@ func _process(_delta: float) -> void:
 ############ EVENT HANDLERS ############
 
 func _on_card_clicked(card_node: CardNode):
-	# Check if there is already an active card
-	if active_card != null:
-		return  # Ignore clicks when a card is active
+	
+	if card_node == active_card:
+		_exit_target_selection()
+		active_card.deselect()
+		active_card = null
+		return
 
 	# Check if the player has enough energy to use the card
 	if battle_data.player.energy < card_node.card_base.cardData.cost:
@@ -184,18 +187,6 @@ func _use_card(card_node: CardNode):
 	card_node.use(battle_data)
 	# Deduct the card's cost from the player's energy
 	battle_data.player.use_energy(card_node.cost)
-	if card_node.card_base.next_in_chain != -1:
-		var card : CardNode = deck_handle.find_card_by_id(card_node.card_base.next_in_chain)
-		if !card:
-			card = deck_handle.find_card_by_id(card_node.card_base.next_in_chain)
-		if !card:
-			pass # check hand for card
-		if !card:
-			print("could not find card with id %d" % card_node.card_base.next_in_chain)
-		else:
-			card.chain_effects = card_node.card_base.cardData.chain_effects_to_pass
-			card.drawn_via_chain = true
-			hand.add_card(card)
 	# Remove the card from the player's hand
 	hand.take_card_by_entity(card_node)
 	# Clear the active card reference

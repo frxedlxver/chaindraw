@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=3 format=3 uid="uid://c6ru0b7b5j0j3"]
+
+[ext_resource type="Script" path="res://src/cards/card_data.gd" id="1_1erfw"]
+[ext_resource type="Texture2D" uid="uid://b4bbvg00hfi71" path="res://assets/sprites/card_art_bide.png" id="1_3gl8j"]
+
+[resource]
+script = ExtResource("1_1erfw")
+title = "Bide"
+description = ""
+cost = 2
+faceTex = ExtResource("1_3gl8j")
+target_type = 0
+dealsDamage = false
+givesBlock = true
+inflictsEnemyStatus = false
+inflictsPlayerStatus = true
